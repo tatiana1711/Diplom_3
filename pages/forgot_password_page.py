@@ -24,10 +24,3 @@ class ForgotPasswordPage(BasePage):
     def is_password_field_active(self):
         # проверяем что поле пароля стало активным после клика на глазок
         return self.is_element_visible(ForgotPasswordLocators.PASSWORD_INPUT_ACTIVE)
-
-    @allure.step("Ввести новый пароль: {password}")
-    def enter_new_password(self, password):
-        # вводим новый пароль при восстановлении
-        element = self.find_element(ForgotPasswordLocators.PASSWORD_INPUT)
-        element.clear()
-        element.send_keys(password)

@@ -4,9 +4,6 @@ import allure
 
 
 class LoginPage(BasePage):
-    @allure.step("Открыть страницу логина")
-    def open_login_page(self):
-        self.driver.get(f"{self.base_url}login")
     
     @allure.step("Ввести email: {email}")
     def enter_email(self, email):

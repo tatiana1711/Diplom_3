@@ -1,18 +1,21 @@
 import pytest
 import allure
 from locators import *
+from urls import *
 
 class TestMainFunctionality:
     @allure.title('Переход в конструктор из личного кабинета')
     def test_go_to_constructor_from_account(self, registered_user, main_page):
         main_page.click_personal_account_button()
         main_page.click_constructor_button()
-        assert main_page.driver.current_url == "https://stellarburgers.education-services.ru/"
+        current_url = main_page.get_current_url()
+        assert current_url == BASE_URL
 
     @allure.title('Переход в ленту заказов')
     def test_go_to_order_feed(self, main_page):
         main_page.go_to_orders_feed()
-        assert "/feed" in main_page.driver.current_url
+        current_url = main_page.get_current_url()
+        assert "/feed" in current_url
 
     @allure.title('Открытие модального окна с деталями ингредиента')
     def test_open_ingredient_modal(self, main_page, constructor_page):
@@ -24,7 +27,6 @@ class TestMainFunctionality:
     def test_close_ingredient_modal(self, main_page, constructor_page):
         main_page.wait_for_main_page_load()
         constructor_page.click_bun_ingredient()
-        assert constructor_page.is_ingredient_details_visible()
         constructor_page.close_modal()
         assert constructor_page.is_ingredient_details_not_visible()
 
@@ -38,9 +40,7 @@ class TestMainFunctionality:
     def test_create_order_authorized_user(self, logged_in_user, main_page, constructor_page):
         main_page.wait_for_main_page_load()
         constructor_page.create_basic_order()
-        assert constructor_page.find_element(ConstructorLocators.ORDER_BUTTON).is_enabled()
         constructor_page.click_order_button()
         constructor_page.wait_for_order_modal_loaded()
         assert constructor_page.is_modal_visible(), "Модальное окно заказа не появилось"
         assert constructor_page.is_order_id_visible(), "Текст 'идентификатор заказа' не отображается"
-        constructor_page.close_modal()

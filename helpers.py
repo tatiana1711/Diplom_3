@@ -1,6 +1,7 @@
 import requests
 import random
 import string
+from urls import *
 
 # тестовые данные для основного пользователя
 TEST_EMAIL = "Gagarin1204@test.com"
@@ -32,7 +33,7 @@ def create_user_via_api():
     user_data = new_user_login_password()
     
     response = requests.post(
-        "https://stellarburgers.education-services.ru/api/auth/register",
+        API_REGISTER, 
         json=user_data
     )
     
@@ -62,7 +63,7 @@ def delete_user_via_api(access_token):
     if access_token:
         headers = {'Authorization': access_token}
         response = requests.delete(
-            "https://stellarburgers.education-services.ru/api/auth/user",
+            API_USER,  
             headers=headers
         )
         return response.status_code == 202

@@ -51,7 +51,7 @@ class BasePage:
     
     @allure.step("Проверить видимость элемента {locator}")
     def is_element_visible(self, locator, timeout=5):
-        # проверяем что элемент видим ый
+        # проверяем что элемент видим
         try:
             return bool(self.wait_for_element_visible(locator, timeout))
         except Exception:
@@ -68,7 +68,7 @@ class BasePage:
     
     @allure.step("Перетаскивание элемента для Chrome")
     def drag_and_drop_chrome(self, drag_locator, drop_locator):
-        #  перетаскивание для Chrome
+        # перетаскивание для Chrome
         drag_element = self.find_element(drag_locator)
         drop_element = self.find_element(drop_locator)
         
@@ -119,3 +119,9 @@ class BasePage:
     def get_order_locator_by_number(self, order_number):
         # создаем локатор для поиска заказа по номеру
         return (By.XPATH, f"//*[contains(text(), '{order_number}')]")
+    
+    @allure.step("Дождаться условия")
+    def wait_until(self, condition, timeout=10):
+        # универсальное ожидание любого условия
+        return WebDriverWait(self.driver, timeout).until(condition)
+    

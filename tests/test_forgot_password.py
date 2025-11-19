@@ -12,23 +12,20 @@ class TestForgotPassword:
         # кликаем на восстановление пароля
         login_page.click_forgot_password_link()
         login_page.wait_for_url_contains("/forgot-password")
-        assert "/forgot-password" in login_page.driver.current_url
+        current_url = login_page.get_current_url()
+        assert "/forgot-password" in current_url
 
     @allure.title('Восстановление пароля с вводом email')
     def test_password_recovery_with_email(self, login_page, main_page, forgot_password_page):
-        # переходим на страницу восстановления пароля через UI
         main_page.click_personal_account_button()
         login_page.wait_for_url_contains("/login")
         login_page.click_forgot_password_link()
         login_page.wait_for_url_contains("/forgot-password")
-        
-        # вводим email и кликаем восстановить
         forgot_password_page.enter_email(TEST_EMAIL)
         forgot_password_page.click_restore_button()
-        
-        # проверяем переход на страницу сброса пароля
         forgot_password_page.wait_for_url_contains("/reset-password")
-        assert "/reset-password" in forgot_password_page.driver.current_url
+        current_url = forgot_password_page.get_current_url()
+        assert "/reset-password" in current_url
 
     @allure.title('Активация поля пароля при клике на иконку')
     def test_password_field_activation(self, login_page, main_page, forgot_password_page):

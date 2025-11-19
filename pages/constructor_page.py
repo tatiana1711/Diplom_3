@@ -1,7 +1,5 @@
 from .base_page import BasePage
 from locators import ConstructorLocators, ModalLocators, MainLocators
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import allure
 
 
@@ -68,12 +66,11 @@ class ConstructorPage(BasePage):
 
     @allure.step("Получить значение счетчика ингредиента")
     def get_ingredient_counter(self):
-        # получаем числовое значение счетчика у ингредиента
-        # если счетчик не найден или не число, возвращаем 0
-        elements = self.driver.find_elements(*ConstructorLocators.INGREDIENT_COUNTER)
-        if elements and elements[0].text.isdigit():
-            return int(elements[0].text)
-        return 0
+        try:
+            element = self.find_element(ConstructorLocators.INGREDIENT_COUNTER)
+            return int(element.text) if element.text.isdigit() else 0
+        except:
+            return 0
     
     @allure.step("Добавить ингредиент и получить значения счетчика")
     def add_ingredient_and_get_counters(self):
@@ -102,16 +99,12 @@ class ConstructorPage(BasePage):
         # проверяем что номер заказа загрузился (не равен заглушке 9999)
         self.wait_for_element_visible(ModalLocators.MODAL, timeout)
         
-        WebDriverWait(self.driver, timeout).until(
-            lambda driver: self.get_order_number() != "9999"
-        )
+        self.wait_until(lambda driver: self.get_order_number() != "9999", timeout)
     
     @allure.step("Дождаться закрытия модального окна заказа")
     def wait_for_modal_closed(self, timeout=10):
         # ждем когда модальное окно полностью закроется
-        WebDriverWait(self.driver, timeout).until(
-            lambda driver: not self.is_modal_visible()
-        )
+        self.wait_until(lambda driver: not self.is_modal_visible(), timeout)
     
     @allure.step("Дождаться загрузки страницы конструктора")
     def wait_for_constructor_page_loaded(self):
